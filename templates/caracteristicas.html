@@ -1,0 +1,22 @@
+{% extends "base_template.html" %}
+{% block content %}
+<h2>Características</h2>
+<table class="table">
+    <thead>
+        <tr>
+        <th>ID</th>
+        <th>Tipo</th>
+        <th>Descripción</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for caracteristica in caracteristicas %}
+        <tr>
+        <td>{{ caracteristica.id }}</td>
+        <td>{{ caracteristica.tipo }}</td>
+        <td>{{ caracteristica.descripcion }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

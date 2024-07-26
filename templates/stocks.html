@@ -1,0 +1,24 @@
+{% extends "base_template.html" %}
+{% block content %}
+<h2>Stocks</h2>
+<table class="table">
+    <thead>
+        <tr>
+        <th>ID</th>
+        <th>Cantidad Disponible</th>
+        <th>Ubicación en el Almacén</th>
+        <th>Equipo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stock in stocks %}
+        <tr>
+        <td>{{ stock.id }}</td>
+        <td>{{ stock.cantidad_disponible }}</td>
+        <td>{{ stock.ubicacion_almacen }}</td>
+        <td>{{ stock.equipo.nombre }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

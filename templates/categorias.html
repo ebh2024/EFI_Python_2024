@@ -1,0 +1,20 @@
+{% extends "base_template.html" %}
+{% block content %}
+<h2>Categorías</h2>
+<table class="table">
+    <thead>
+        <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for categoria in categorias %}
+        <tr>
+        <td>{{ categoria.id }}</td>
+        <td>{{ categoria.nombre }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

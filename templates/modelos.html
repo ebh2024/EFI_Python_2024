@@ -1,0 +1,22 @@
+{% extends "base_template.html" %}
+{% block content %}
+<h2>Modelos</h2>
+<table class="table">
+    <thead>
+        <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Fabricante</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for modelo in modelos %}
+        <tr>
+        <td>{{ modelo.id }}</td>
+        <td>{{ modelo.nombre }}</td>
+        <td>{{ modelo.fabricante.nombre }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
