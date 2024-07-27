@@ -1,6 +1,7 @@
 {% extends "base_template.html" %}
 {% block content %}
 <h2>Equipos</h2>
+<a href="{{ url_for('new_equipo') }}" class="btn btn-primary">Nuevo Equipo</a>
 <table class="table">
     <thead>
         <tr>
@@ -9,6 +10,7 @@
         <th>Modelo</th>
         <th>Categoría</th>
         <th>Costo</th>
+        <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -19,8 +21,15 @@
         <td>{{ equipo.modelo.nombre }}</td>
         <td>{{ equipo.categoria.nombre }}</td>
         <td>{{ equipo.costo }}</td>
+        <td>
+            <a href="{{ url_for('update_equipo', id=equipo.id) }}" class="btn btn-warning">Editar</a>
+            <form action="{{ url_for('delete_equipo', id=equipo.id) }}" method="POST" style="display:inline;">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+        </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 {% endblock %}
+
