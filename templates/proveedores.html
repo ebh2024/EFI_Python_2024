@@ -1,22 +1,31 @@
 {% extends "base_template.html" %}
 {% block content %}
-<h2>Proveedores</h2>
-<table class="table">
-    <thead>
-        <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Contacto</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for proveedor in proveedores %}
-        <tr>
-        <td>{{ proveedor.id }}</td>
-        <td>{{ proveedor.nombre }}</td>
-        <td>{{ proveedor.contacto }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div class="container">
+        <h2 class="mt-4">Proveedores</h2>
+        <a href="{{ url_for('new_proveedor') }}" class="btn btn-primary mb-3">Añadir Proveedor</a>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Contacto</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for proveedor in proveedores %}
+                <tr>
+                    <td>{{ proveedor.id }}</td>
+                    <td>{{ proveedor.nombre }}</td>
+                    <td>{{ proveedor.contacto }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_proveedor', id=proveedor.id) }}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{{ url_for('delete_proveedor', id=proveedor.id) }}" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
+
