@@ -41,6 +41,7 @@ class ProveedorForm(FlaskForm):
     submit = SubmitField('Guardar')
 
 class AccesorioForm(FlaskForm):
-    tipo = StringField('Tipo', validators=[DataRequired()])
-    modelo_id = SelectField('Modelo', coerce=int, validators=[DataRequired()])
-    submit = SubmitField('Guardar')    
+    tipo = StringField('Tipo de Accesorio', validators=[DataRequired()])
+    compatible_con_modelos = StringField('Compatible con Modelos', validators=[DataRequired()])
+    categoria_id = SelectField('Categoría', coerce=int)  
+    submit = SubmitField('Guardar')

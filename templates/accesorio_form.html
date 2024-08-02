@@ -1,15 +1,19 @@
 {% extends "base_template.html" %}
 {% block content %}
     <h2>{{ legend }}</h2>
-    <form method="POST" action="">
+    <form method="POST">
         {{ form.hidden_tag() }}
         <div class="form-group">
             {{ form.tipo.label(class="form-control-label") }}
             {{ form.tipo(class="form-control") }}
         </div>
         <div class="form-group">
-            {{ form.modelo_id.label(class="form-control-label") }}
-            {{ form.modelo_id(class="form-control") }}
+            {{ form.compatible_con_modelos.label(class="form-control-label") }}
+            {{ form.compatible_con_modelos(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.categoria_id.label(class="form-control-label") }}
+            {{ form.categoria_id(class="form-control") }}
         </div>
         <div class="form-group">
             {{ form.submit(class="btn btn-primary") }}

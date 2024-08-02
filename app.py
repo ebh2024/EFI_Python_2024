@@ -7,6 +7,7 @@ from forms import EquipoForm, ModeloForm, CategoriaForm, FabricanteForm, Caracte
 
 
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/database'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -19,8 +20,13 @@ bootstrap = Bootstrap(app)
 from models import Equipo, Modelo, Fabricante, Accesorio, Caracteristica, Categoria, Stock, Proveedor
 
 def populate_choices(form):
-    form.modelo_id.choices = [(modelo.id, modelo.nombre) for modelo in Modelo.query.all()]
-    form.categoria_id.choices = [(categoria.id, categoria.nombre) for categoria in Categoria.query.all()]
+    if isinstance(form, AccesorioForm):
+        form.categoria_id.choices = [(categoria.id, categoria.nombre_categoria) for categoria in Categoria.query.all()]
+    elif isinstance(form, EquipoForm):
+        form.modelo_id.choices = [(modelo.id, modelo.nombre_modelo) for modelo in Modelo.query.all()]
+        form.categoria_id.choices = [(categoria.id, categoria.nombre_categoria) for categoria in Categoria.query.all()]
+    elif isinstance(form, ModeloForm):
+        form.fabricante_id.choices = [(fabricante.id, fabricante.nombre_fabricante) for fabricante in Fabricante.query.all()]
 
 @app.route('/')
 def home():
@@ -286,12 +292,16 @@ def accesorios():
 @app.route('/accesorio/new', methods=['GET', 'POST'])
 def new_accesorio():
     form = AccesorioForm()
-    populate_choices(form)
+    populate_choices(form)  
     if form.validate_on_submit():
-        accesorio = Accesorio(tipo=form.tipo.data, modelo_id=form.modelo_id.data)
+        accesorio = Accesorio(
+            tipo=form.tipo.data,
+            compatible_con_modelos=form.compatible_con_modelos.data,
+            categoria_id=form.categoria_id.data  
+        )
         db.session.add(accesorio)
         db.session.commit()
-        flash('Accesorio creado exitosamente.', 'success')
+        flash('Accesorio creado con éxito', 'success')
         return redirect(url_for('accesorios'))
     return render_template('accesorio_form.html', form=form, legend='Nuevo Accesorio')
 
