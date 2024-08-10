@@ -27,9 +27,7 @@ Este proyecto es un sistema de gestión de equipos, que permite administrar equi
 ## Instalación
 
 1. Clona el repositorio:
-
-   https://github.com/ebh2024/EFI_Python_2024.git
-   cd EFI_Python_2024
+   git clone https://github.com/ebh2024/EFI_Python_2024.git
    
 2. Crea y activa un entorno virtual:   
      python -m venv .venv
