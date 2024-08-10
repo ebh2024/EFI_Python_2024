@@ -4,6 +4,10 @@
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <div class="form-group">
+            {{ form.equipo_id.label(class="form-control-label") }}
+            {{ form.equipo_id(class="form-control") }}
+        </div>
+        <div class="form-group">
             {{ form.cantidad.label(class="form-control-label") }}
             {{ form.cantidad(class="form-control") }}
         </div>

@@ -3,6 +3,7 @@ from flask import Flask, render_template, url_for, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
+
 from forms import EquipoForm, ModeloForm, CategoriaForm, FabricanteForm, CaracteristicaForm, StockForm, ProveedorForm, AccesorioForm
 
 
@@ -21,12 +22,16 @@ from models import Equipo, Modelo, Fabricante, Accesorio, Caracteristica, Catego
 
 def populate_choices(form):
     if isinstance(form, AccesorioForm):
-        form.categoria_id.choices = [(categoria.id, categoria.nombre_categoria) for categoria in Categoria.query.all()]
+        form.modelo_id.choices = [(modelo.id, modelo.nombre) for modelo in Modelo.query.all()]
+        form.categoria_id.choices = [(categoria.id, categoria.nombre) for categoria in Categoria.query.all()]
     elif isinstance(form, EquipoForm):
-        form.modelo_id.choices = [(modelo.id, modelo.nombre_modelo) for modelo in Modelo.query.all()]
-        form.categoria_id.choices = [(categoria.id, categoria.nombre_categoria) for categoria in Categoria.query.all()]
+        form.modelo_id.choices = [(modelo.id, modelo.nombre) for modelo in Modelo.query.all()]
+        form.categoria_id.choices = [(categoria.id, categoria.nombre) for categoria in Categoria.query.all()]
     elif isinstance(form, ModeloForm):
         form.fabricante_id.choices = [(fabricante.id, fabricante.nombre_fabricante) for fabricante in Fabricante.query.all()]
+    elif isinstance(form, StockForm):
+        form.equipo_id.choices = [(equipo.id, equipo.nombre) for equipo in Equipo.query.all()]
+
 
 @app.route('/')
 def home():
@@ -42,7 +47,7 @@ def new_equipo():
     form = EquipoForm()
     populate_choices(form)
     if form.validate_on_submit():
-        equipo = Equipo(nombre=form.nombre.data, modelo_id=form.modelo_id.data, categoria_id=form.categoria_id.data, costo=form.costo.data)
+        equipo = Equipo(nombre=form.nombre.data ,modelo_id=form.modelo_id.data, categoria_id=form.categoria_id.data, costo=form.costo.data)
         db.session.add(equipo)
         db.session.commit()
         flash('Equipo creado exitosamente.', 'success')
@@ -147,6 +152,14 @@ def update_categoria(id):
         return redirect(url_for('categorias'))
     return render_template('categoria_form.html', form=form, legend='Actualizar Categoría')
 
+@app.route('/categoria/<int:id>/delete', methods=['POST'])
+def delete_categoria(id):
+    categoria = Categoria.query.get_or_404(id)
+    db.session.delete(categoria)
+    db.session.commit()
+    flash('Categoría eliminada exitosamente.', 'success')
+    return redirect(url_for('categorias'))
+
 @app.route('/fabricantes')
 def fabricantes():
     fabricantes = Fabricante.query.all()
@@ -219,6 +232,14 @@ def update_caracteristica(id):
         return redirect(url_for('caracteristicas'))
     return render_template('caracteristica_form.html', form=form, legend='Actualizar Característica')
 
+@app.route('/caracteristica/<int:id>/delete', methods=['POST'])
+def delete_caracteristica(id):
+    caracteristica = Caracteristica.query.get_or_404(id)
+    db.session.delete(caracteristica)
+    db.session.commit()
+    flash('Característica eliminada exitosamente.', 'success')
+    return redirect(url_for('caracteristicas'))
+
 
 
 @app.route('/stocks')
@@ -229,28 +250,50 @@ def stocks():
 @app.route('/stock/new', methods=['GET', 'POST'])
 def new_stock():
     form = StockForm()
+    form.equipo_id.choices = [(equipo.id, equipo.nombre) for equipo in Equipo.query.all()]
+
     if form.validate_on_submit():
-        stock = Stock(cantidad=form.cantidad.data, ubicacion=form.ubicacion.data)
+        stock = Stock(
+            equipo_id=form.equipo_id.data,
+            cantidad=form.cantidad.data,  
+            ubicacion=form.ubicacion.data
+        )
         db.session.add(stock)
         db.session.commit()
         flash('Stock creado exitosamente.', 'success')
         return redirect(url_for('stocks'))
+    
     return render_template('stock_form.html', form=form, legend='Nuevo Stock')
 
 @app.route('/stock/<int:id>/update', methods=['GET', 'POST'])
 def update_stock(id):
     stock = Stock.query.get_or_404(id)
     form = StockForm()
+
+    form.equipo_id.choices = [(equipo.id, equipo.nombre) for equipo in Equipo.query.all()]
+
     if request.method == 'GET':
+        form.equipo_id.data = stock.equipo_id
         form.cantidad.data = stock.cantidad
         form.ubicacion.data = stock.ubicacion
+
     if form.validate_on_submit():
+        stock.equipo_id = form.equipo_id.data
         stock.cantidad = form.cantidad.data
         stock.ubicacion = form.ubicacion.data
         db.session.commit()
         flash('Stock actualizado exitosamente.', 'success')
         return redirect(url_for('stocks'))
+
     return render_template('stock_form.html', form=form, legend='Actualizar Stock')
+
+@app.route('/stock/<int:id>/delete', methods=['GET', 'POST'])
+def delete_stock(id):
+    stock = Stock.query.get_or_404(id)
+    db.session.delete(stock)
+    db.session.commit()
+    flash('Stock eliminado exitosamente.', 'success')
+    return redirect(url_for('stocks'))
 
 
 @app.route('/proveedores')
@@ -284,42 +327,68 @@ def update_proveedor(id):
         return redirect(url_for('proveedores'))
     return render_template('proveedor_form.html', form=form, legend='Actualizar Proveedor')
 
+@app.route('/proveedores/<int:id>/delete', methods=['POST'])
+def delete_proveedor(id):
+    proveedor = Proveedor.query.get_or_404(id)
+    db.session.delete(proveedor)
+    db.session.commit()
+    flash('Proveedor eliminado exitosamente.', 'success')
+    return redirect(url_for('proveedores'))
+
+
+
 @app.route('/accesorios')
 def accesorios():
     accesorios = Accesorio.query.all()
     return render_template('accesorios.html', accesorios=accesorios)
 
-@app.route('/accesorio/new', methods=['GET', 'POST'])
+@app.route('/accesorios/new', methods=['GET', 'POST'])
 def new_accesorio():
     form = AccesorioForm()
-    populate_choices(form)  
+    populate_choices(form)  # Ensure this populates 'categoria_id'
+    
     if form.validate_on_submit():
         accesorio = Accesorio(
             tipo=form.tipo.data,
-            compatible_con_modelos=form.compatible_con_modelos.data,
-            categoria_id=form.categoria_id.data  
+            modelo_id=form.modelo_id.data,
+            categoria_id=form.categoria_id.data  # Include categoria_id here
         )
         db.session.add(accesorio)
         db.session.commit()
-        flash('Accesorio creado con éxito', 'success')
+        flash('Accesorio creado exitosamente.', 'success')
         return redirect(url_for('accesorios'))
+    
     return render_template('accesorio_form.html', form=form, legend='Nuevo Accesorio')
 
 @app.route('/accesorio/<int:id>/update', methods=['GET', 'POST'])
 def update_accesorio(id):
     accesorio = Accesorio.query.get_or_404(id)
     form = AccesorioForm()
-    populate_choices(form)
+    populate_choices(form)  # Ensure this populates 'categoria_id'
+    
     if request.method == 'GET':
         form.tipo.data = accesorio.tipo
         form.modelo_id.data = accesorio.modelo_id
+        form.categoria_id.data = accesorio.categoria_id  # Set existing categoria_id
+    
     if form.validate_on_submit():
         accesorio.tipo = form.tipo.data
         accesorio.modelo_id = form.modelo_id.data
+        accesorio.categoria_id = form.categoria_id.data  # Include categoria_id here
         db.session.commit()
         flash('Accesorio actualizado exitosamente.', 'success')
         return redirect(url_for('accesorios'))
+    
     return render_template('accesorio_form.html', form=form, legend='Actualizar Accesorio')
+
+@app.route('/accesorio/<int:id>/delete', methods=['POST'])
+def delete_accesorio(id):
+    accesorio = Accesorio.query.get_or_404(id)
+    db.session.delete(accesorio)
+    db.session.commit()
+    flash('Accesorio eliminado exitosamente.', 'success')
+    return redirect(url_for('accesorios'))
+
 
 
 

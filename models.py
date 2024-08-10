@@ -10,6 +10,7 @@ class Equipo(db.Model):
     
     modelo = db.relationship('Modelo', back_populates='equipos')
     categoria = db.relationship('Categoria', back_populates='equipos')
+    stocks = db.relationship('Stock', backref='equipo', lazy=True)
 
 class Modelo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,7 +29,7 @@ class Categoria(db.Model):
 class Fabricante(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(80), nullable=False)
-    pais_de_origen = db.Column(db.String(80))
+    pais_origen = db.Column(db.String(80))
     
     modelos = db.relationship('Modelo', back_populates='fabricante')
 
@@ -39,11 +40,15 @@ class Caracteristica(db.Model):
     
 class Stock(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    cantidad_disponible = db.Column(db.Integer, nullable=False)
-    ubicacion_almacen = db.Column(db.String(80), nullable=False)
     equipo_id = db.Column(db.Integer, db.ForeignKey('equipo.id'), nullable=False)
-    
-    equipo = db.relationship('Equipo', back_populates='stock')
+    cantidad = db.Column(db.Integer, nullable=False)
+    ubicacion = db.Column(db.String(100), nullable=False)
+
+
+    def __init__(self, equipo_id, cantidad, ubicacion):
+        self.equipo_id = equipo_id
+        self.cantidad = cantidad
+        self.ubicacion = ubicacion
 
 class Proveedor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -54,6 +59,7 @@ class Accesorio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tipo = db.Column(db.String(80), nullable=False)
     modelo_id = db.Column(db.Integer, db.ForeignKey('modelo.id'), nullable=False)
+    categoria_id = db.Column(db.Integer, db.ForeignKey('categoria.id'), nullable=False)  
     
     modelo = db.relationship('Modelo', back_populates='accesorios')
 
