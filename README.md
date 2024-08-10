@@ -39,6 +39,14 @@ Este proyecto es un sistema de gestión de equipos, que permite administrar equi
       pip install -r requirements.txt
 
 
-4. Configurar en app.py:
-   app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/<tu-base-de-datos>'
+4. Configura la base de datos en app.py. Asegúrate de que la URI de la base de datos sea correcta::
+   ['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/<tu-base-de-datos>'
+
+5. Inicializa la base de datos:
+   flask db init
+   flask db migrate -m "Initial migration"
+   flask db upgrade
+
+6. Ejecuta la aplicación:
+   flask run
 
