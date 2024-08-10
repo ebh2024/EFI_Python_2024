@@ -39,5 +39,6 @@ Este proyecto es un sistema de gestión de equipos, que permite administrar equi
       pip install -r requirements.txt
 
 
-
+4. Configurar en app.py:
+   app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/<tu-base-de-datos>'
 
