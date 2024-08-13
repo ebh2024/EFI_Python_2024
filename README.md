@@ -16,13 +16,6 @@ Este proyecto es un sistema de gestión de equipos, que permite administrar equi
   - Proveedor
   - Accesorio
 
-## Requisitos
-
-- Python 3.x
-- Flask
-- Flask-WTF
-- Flask-SQLAlchemy
-- Flask-Migrate
 
 ## Instalación
 
