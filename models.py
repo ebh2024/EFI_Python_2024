@@ -10,7 +10,7 @@ class Equipo(db.Model):
     
     modelo = db.relationship('Modelo', back_populates='equipos')
     categoria = db.relationship('Categoria', back_populates='equipos')
-    stocks = db.relationship('Stock', backref='equipo', lazy=True)
+    stocks = db.relationship('Stock', backref='equipo', lazy=True, overlaps="stock")
 
 class Modelo(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -3,7 +3,7 @@ from wtforms import StringField, IntegerField, SubmitField, SelectField, TextAre
 from wtforms.validators import DataRequired, Length
 
 class EquipoForm(FlaskForm):
-    nombre = StringField('Nombre', validators=[DataRequired()])
+    nombre = StringField('Nombre', validators=[DataRequired(), Length(min=3, max= 40)], render_kw={"class":"form-control", "placeholder": "Nombre"})
     modelo_id = SelectField('Modelo', coerce=int)
     categoria_id = SelectField('Categoría', coerce=int)
     costo = FloatField('Costo', validators=[DataRequired()])
@@ -11,22 +11,22 @@ class EquipoForm(FlaskForm):
 
 
 class ModeloForm(FlaskForm):
-    nombre = StringField('Nombre', validators=[DataRequired()])
+    nombre = StringField('Nombre', validators=[DataRequired(), Length(min=3, max= 40)])
     fabricante_id = SelectField('Fabricante', coerce=int, validators=[DataRequired()])
     submit = SubmitField('Guardar')
     
     
 class CategoriaForm(FlaskForm):
-    nombre = StringField('Nombre', validators=[DataRequired()])
+    nombre = StringField('Nombre', validators=[DataRequired(), Length(min=3, max= 40)])
     submit = SubmitField('Guardar')
 
 class FabricanteForm(FlaskForm):
-    nombre = StringField('Nombre', validators=[DataRequired()])
+    nombre = StringField('Nombre', validators=[DataRequired(), Length(min=3, max= 40)])
     pais_origen = StringField('País de Origen', validators=[DataRequired()])
     submit = SubmitField('Guardar')
 
 class CaracteristicaForm(FlaskForm):
-    tipo = StringField('Tipo', validators=[DataRequired()])
+    tipo = StringField('Tipo', validators=[DataRequired(), ])
     descripcion = TextAreaField('Descripción', validators=[DataRequired()])
     submit = SubmitField('Guardar')
 
@@ -37,7 +37,7 @@ class StockForm(FlaskForm):
     submit = SubmitField('Guardar')
 
 class ProveedorForm(FlaskForm):
-    nombre = StringField('Nombre', validators=[DataRequired()])
+    nombre = StringField('Nombre', validators=[DataRequired(), Length(min=3, max= 40)])
     contacto = StringField('Contacto', validators=[DataRequired()])
     submit = SubmitField('Guardar')
 
