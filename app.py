@@ -3,6 +3,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from flask import Flask
+from flask_migrate import Migrate
 from config import Config
 from models import db, User
 from schemas import ma
@@ -11,12 +12,14 @@ from flask_jwt_extended import JWTManager
 from flasgger import Swagger
 from werkzeug.security import generate_password_hash
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 ma.init_app(app)
 jwt = JWTManager(app)
 swagger = Swagger(app)
+migrate = Migrate(app, db)
 
 with app.app_context():
     db.create_all()
