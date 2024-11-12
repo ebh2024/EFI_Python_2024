@@ -1,14 +1,21 @@
+# Librerías Instaladas
 from flask import Blueprint, request, jsonify
 from flasgger.utils import swag_from
-from models import db, User
-from schemas import UserSchema, NestedModelSchema
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from sqlalchemy.exc import IntegrityError
 
+# Módulos Propios
+from models import db, User
+from schemas import UserSchema, NestedModelSchema
+
+
+# Inicialización del Blueprint y los esquemas
 api = Blueprint('api', __name__)
 user_schema = UserSchema()
 nested_model_schema = NestedModelSchema()
 nested_models_schema = NestedModelSchema(many=True)
+
+# Rutas de la API
 
 @api.route('/login', methods=['POST'])
 @swag_from({
@@ -240,8 +247,6 @@ def delete_user(user_id):
     db.session.commit()
 
     return jsonify({"msg": "User deleted successfully"})
-
-
 
 @api.route('/users', methods=['GET'])
 @jwt_required()

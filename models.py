@@ -1,6 +1,9 @@
+# Librerías Instaladas
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
+# Definición de la base de datos
 db = SQLAlchemy()
 
 class User(db.Model):

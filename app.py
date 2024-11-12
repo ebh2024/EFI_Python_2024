@@ -1,17 +1,23 @@
+# Librerías Nativas
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+# Librerías Instaladas
 from flask import Flask
 from flask_migrate import Migrate
-from config import Config
-from models import db, User
-from schemas import ma
-from views import api
 from flask_jwt_extended import JWTManager
 from flasgger import Swagger
 from werkzeug.security import generate_password_hash
 
+# Módulos Propios
+from config import Config
+from models import db, User
+from schemas import ma
+from views import api
+
+
+# Configuración de la aplicación
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 app = Flask(__name__)
 app.config.from_object(Config)
